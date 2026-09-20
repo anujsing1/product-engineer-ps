@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: durable-reminders
+  datasource:
+    url: jdbc:h2:file:./data/scheduler;DB_CLOSE_DELAY=-1;AUTO_SERVER=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+scheduler:
+  retry:
+    max-attempts: 3
+    base-delay: PT30S
+
+logging:
+  level:
+    com.caygnus: DEBUG
+    com.durable.scheduler: DEBUG
+    org.hibernate.SQL: INFO
+    org.hibernate.orm.jdbc.bind: INFO
