@@ -6,7 +6,7 @@
 - **Email:** anujsing1@gmail.com
 - **GitHub:** https://github.com/caygnus/product-engineer-ps/blob/main/problems/03-durable-reminders
 - **Selected problem:** Problem 3: Durable Reminders and Follow-Ups
-- **Demo video:** [Insert Video Link Here]
+- **Demo video:** https://canva.link/pjj5txmtzfoxr31
 
 ## Run the project
 
