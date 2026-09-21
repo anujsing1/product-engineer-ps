@@ -77,14 +77,14 @@ Tests use an in-memory H2 database, disable the scheduler tick, inject `MutableC
 
 | Scenario | Status | How verified |
 |---|---|---|
-| AC1 Scheduled delivery | Done | `ac1_scheduledDelivery_withInjectedClock` |
-| AC2 Restart recovery | Done | `ac2_restartRecovery_overdueWorkDiscoveredOnPoll` (overdue durable row + poll) |
-| AC3 Temporary failure | Done | `ac3_temporaryFailure_thenRetrySuccess` |
-| AC3 Retry exhaustion | Done | `ac3_retryExhaustion_reachesFailed` |
-| AC4 Duplicate execution | Done | `ac4_duplicateExecution_oneLogicalNotification` |
-| AC5 Edit before execution | Done | `ac5_editBeforeExecution_supersedesOldSchedule` |
-| AC6 Cancellation | Done | `ac6_cancelBeforeDelivery_noSuccessfulDelivery` + optimistic-lock race test |
-| AC7 Time zones / DST | Done | Kolkata + New York instants; US fall-back overlap → later offset |
+| AC1 Scheduled delivery | Done | `./mvnw test -Dtest=SchedulerIntegrationTest#ac1_scheduledDelivery_withInjectedClock` |
+| AC2 Restart recovery | Done | `./mvnw test -Dtest=SchedulerIntegrationTest#ac2_restartRecovery_overdueWorkDiscoveredOnPoll`|
+| AC3 Temporary failure | Done | `./mvnw test -Dtest=SchedulerIntegrationTest#ac3_temporaryFailure_thenRetrySuccess` |
+| AC3 Retry exhaustion | Done | `./mvnw test -Dtest=SchedulerIntegrationTest#ac3_retryExhaustion_reachesFailed` |
+| AC4 Duplicate execution | Done | `./mvnw test -Dtest=SchedulerIntegrationTest#ac4_duplicateExecution_oneLogicalNotification` |
+| AC5 Edit before execution | Done | `./mvnw test -Dtest=SchedulerIntegrationTest#ac5_editBeforeExecution_supersedesOldSchedule` |
+| AC6 Cancellation | Done | `./mvnw test -Dtest=SchedulerIntegrationTest#ac6_cancelRace_optimisticLockAbortsStaleWrite`|
+| AC7 Time zones / DST | Done | `./mvnw test -Dtest=SchedulerIntegrationTest#ac7_dstOverlap_usesLaterOffset` |
 
 **Problem-specific verification benchmark**
 
@@ -172,12 +172,11 @@ Durable schedule state in H2 is the source of truth (not in-memory timers). The 
 
 ## Credibility note
 
-Describe one product or system you previously helped ship:
-
-- **The problem it solved:** [Fill in]
-- **Your personal contribution:** [Fill in]
-- **The scale or operational complexity involved:** [Fill in]
-- **One difficult engineering or product decision:** [Fill in]
-- **A public link or other evidence, when available:** [Fill in]
-
+#### Previous System Shipped: Grab Merchant Lending Platform: 
+- **The problem it solved:** Designed and launched a lending platform in Malaysia to evaluate and disburse working capital loans to Grab merchants. The core challenge was orchestrating loan disbursements securely while relying on third-party financial systems for final approval.
+- **Personal Contribution:** Served as the lead engineer, driving the architectural design and developing the core platform backend, specifically managing the integration and state orchestration with the third-party system.
+- **Scale & Complexity:** Operated within Grab's high-traffic ecosystem, where financial transactions require strict ACID guarantees, idempotency, and high resilience against upstream latency or downtime to prevent costly duplicate loan disbursements.
+- **Difficult Decision:** Rather than using a synchronous blocking architecture to call the third-party API and wait for approval—which would exhaust thread pools during downstream latency spikes—I architected an asynchronous state machine. Disbursements were persisted in a PENDING state, and we utilized an asynchronous polling/webhook mechanism to capture the external response. This decision traded immediate synchronous UX feedback for backend resilience, ensuring the system remained stable and isolated from third-party outages while successfully transitioning states to APPROVED or CANCELED.
+  
 Confidential details may be anonymized and figures may be approximate.
+
